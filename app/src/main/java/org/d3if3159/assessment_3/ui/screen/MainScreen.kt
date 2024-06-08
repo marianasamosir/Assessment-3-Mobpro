@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -79,7 +80,7 @@ fun ListItem(student: Student) {
         modifier = Modifier
             .padding(4.dp)
             .border(1.dp, Color.Gray),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -88,12 +89,13 @@ fun ListItem(student: Student) {
                 .build(),
             contentDescription = stringResource(id = R.string.image, student.name),
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = R.drawable.loading_img),
+            modifier = Modifier.fillMaxWidth().padding(4.dp)
+        )
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp)
-        )
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(4.dp)
                 .background(Color(red = 0f, green = 0f, blue = 0f, alpha = 0.5f))
                 .padding(4.dp)
         ) {
