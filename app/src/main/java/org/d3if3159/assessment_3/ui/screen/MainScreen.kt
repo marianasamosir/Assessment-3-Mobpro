@@ -90,7 +90,10 @@ fun ListItem(student: Student) {
             contentDescription = stringResource(id = R.string.image, student.name),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.loading_img),
-            modifier = Modifier.fillMaxWidth().padding(4.dp)
+            error = painterResource(id = R.drawable.broken_img),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp)
         )
         Column(
             modifier = Modifier
