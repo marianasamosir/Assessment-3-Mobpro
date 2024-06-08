@@ -26,4 +26,8 @@ object StudentApi {
     val service: StudentsApiService by lazy {
         retrofit.create(StudentsApiService::class.java)
     }
+
+    fun getStudentUrl(imageId: String): String {
+        return "$BASE_URL$imageId.jpg"
+    }
 }
