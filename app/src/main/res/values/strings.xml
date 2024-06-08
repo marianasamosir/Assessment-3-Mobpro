@@ -3,4 +3,5 @@
     <string name="image">Image %1$s</string>
     <string name="error">Failed to load data.. connection error.</string>
     <string name="try_again">Try again</string>
+    <string name="profil">Profile</string>
 </resources>
