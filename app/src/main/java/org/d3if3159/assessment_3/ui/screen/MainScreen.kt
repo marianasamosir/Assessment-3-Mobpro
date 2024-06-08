@@ -28,6 +28,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,6 +72,7 @@ fun MainScreen() {
     val context = LocalContext.current
     val dataStore = UserDataStore(context)
     val user by dataStore.userFlow.collectAsState(initial = User())
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -85,7 +89,7 @@ fun MainScreen() {
                         if (user.email.isEmpty()) {
                             CoroutineScope(Dispatchers.IO).launch { signIn(context, dataStore) }
                         } else {
-                            Log.d("SIGN-IN", "User: $user")
+                            showDialog = true
                         }
                     }) {
                         Icon(
@@ -99,6 +103,13 @@ fun MainScreen() {
         }
     ) {padding ->
         ScreenContent(Modifier.padding(padding))
+        if (showDialog) {
+            ProfileDialog(
+                user = user,
+                onDismissRequest = { showDialog = false }) {
+                showDialog = false
+            }
+        }
     }
 }
 
