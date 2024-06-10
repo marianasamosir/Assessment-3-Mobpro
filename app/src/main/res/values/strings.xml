@@ -6,4 +6,5 @@
     <string name="profil">Profile</string>
     <string name="close">Close</string>
     <string name="logout">Logout</string>
+    <string name="add_student">Add Student</string>
 </resources>
