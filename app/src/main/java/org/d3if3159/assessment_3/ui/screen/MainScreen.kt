@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -88,10 +87,12 @@ fun MainScreen() {
     val dataStore = UserDataStore(context)
     val user by dataStore.userFlow.collectAsState(initial = User())
     var showDialog by remember { mutableStateOf(false) }
+    var showStudentDialog by remember { mutableStateOf(false) }
 
     var bitmap: Bitmap? by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(CropImageContract()) {
         bitmap = getCroppedImage(context.contentResolver, it)
+        if (bitmap != null) showStudentDialog = true
     }
 
     Scaffold(
@@ -149,6 +150,14 @@ fun MainScreen() {
                 onDismissRequest = { showDialog = false }) {
                 CoroutineScope(Dispatchers.IO).launch { signOut(context, dataStore) }
                 showDialog = false
+            }
+        }
+        if (showStudentDialog) {
+            StudentDialog(
+                bitmap = bitmap,
+                onDismissRequest = { showStudentDialog = false }) { name, nim ->
+                Log.d("TAMBAH", "$name $nim ditambahkan")
+                showStudentDialog = false
             }
         }
     }
