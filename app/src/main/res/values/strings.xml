@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Student 02</string>
     <string name="image">Image %1$s</string>
-    <string name="error">Failed to load data.. connection error.</string>
+    <string name="error1">No internet connection</string>
+    <string name="error2">Please check your internet connection</string>
     <string name="try_again">Try again</string>
     <string name="profil">Profile</string>
     <string name="close">Close</string>

@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -50,6 +52,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -191,12 +194,12 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier){
 
     when (status) {
         ApiStatus.LOADING -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+//            Box(
+//                modifier = Modifier.fillMaxSize(),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                CircularProgressIndicator()
+//            }
         }
 
         ApiStatus.SUCCESS -> {
@@ -213,14 +216,25 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier){
         
         ApiStatus.FAILED -> {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(25.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = stringResource(id = R.string.error))
+                Image(
+                    painter = painterResource(id = R.drawable.wifi_img),
+                    contentDescription = null,
+                    modifier = Modifier.size(60.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.error1),
+                    style = TextStyle(fontSize = 24.sp)
+                )
+                Text(
+                    text = stringResource(id = R.string.error2)
+                )
                 Button(
                     onClick = { viewModel.retrieveData(userId)},
-                    modifier = Modifier.padding(top = 16.dp),
+                    modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF7C5ACB))
                 ) {

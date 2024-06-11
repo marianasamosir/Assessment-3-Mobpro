@@ -14,7 +14,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 
-private const val BASE_URL = "https://raw.githubusercontent.com/marianasamosir/Assessment-3-Mobpro/static-api/" // tar ini jg diganti
+private const val BASE_URL = "https://unspoken.my.id/"
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -25,13 +25,13 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 interface StudentsApiService {
-    @GET("student.json") //tar ini diganti jadi student.php
+    @GET("student.php")
     suspend fun getStudent(
         @Header("Authorization") userId: String
     ): List<Student>
 
     @Multipart
-//    @POST()
+    @POST("student.php")
     suspend fun postStudent(
         @Header("Authorization") userId: String,
         @Part("name") name: RequestBody,
