@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -22,8 +25,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,11 +46,14 @@ fun StudentDialog(
 ) {
     var name by remember { mutableStateOf("") }
     var nim by remember { mutableStateOf("") }
-    
+
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier.padding(16.dp),
             shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -59,7 +67,7 @@ fun StudentDialog(
                         .aspectRatio(1f)
                 )
                 OutlinedTextField(
-                    value = name, 
+                    value = name,
                     onValueChange = { name = it},
                     label = { Text(text = stringResource(id = R.string.name))},
                     maxLines = 1,
@@ -67,18 +75,20 @@ fun StudentDialog(
                         capitalization = KeyboardCapitalization.Words,
                         imeAction = ImeAction.Next
                     ),
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp),
+                    textStyle = TextStyle(color = Color.Black)
                 )
                 OutlinedTextField(
                     value = nim,
-                    onValueChange = { nim = it },
+                    onValueChange = { nim = it},
                     label = { Text(text = stringResource(id = R.string.nim))},
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp),
+                    textStyle = TextStyle(color = Color.Black)
                 )
                 Row(
                     modifier = Modifier
@@ -88,18 +98,28 @@ fun StudentDialog(
                 ) {
                     OutlinedButton(
                         onClick = { onDismissRequest() },
-                        enabled = name.isNotEmpty() && nim.isNotEmpty(),
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF7C5ACB)
+                        )
                     ) {
-                        Text(text = stringResource(id = R.string.cancle))
+                        Text(
+                            text = stringResource(id = R.string.cancle),
+                            color = Color.White
+                        )
                     }
                     OutlinedButton(
-                        onClick = { onDismissRequest() },
+                        onClick = { onConfirmation(name, nim) },
                         enabled = name.isNotEmpty() && nim.isNotEmpty(),
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Green
+                        )
                     ) {
-
-                        Text(text = stringResource(id = R.string.save))
+                        Text(
+                            text = stringResource(id = R.string.save),
+                            color = Color.Black
+                        )
                     }
                 }
             }
@@ -115,7 +135,7 @@ fun AddDialogPreview() {
         StudentDialog(
             bitmap = null,
             onDismissRequest = {},
-            onConfirmation = { _, _ -> }
+            onConfirmation = { _, _ ->}
         )
     }
 }

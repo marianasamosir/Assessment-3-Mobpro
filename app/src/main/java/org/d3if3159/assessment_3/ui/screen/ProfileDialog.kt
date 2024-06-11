@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,7 +48,8 @@ fun ProfileDialog(
             modifier = Modifier.padding(16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                containerColor = Color.White
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -60,19 +64,23 @@ fun ProfileDialog(
                     contentScale = ContentScale.Crop,
                     placeholder = painterResource(id = R.drawable.loading_img),
                     error = painterResource(id = R.drawable.broken_img),
-                    modifier = Modifier.size(100.dp).clip(CircleShape)
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
                 )
                 Text(
                     text = user.name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.padding(top = 16.dp),
+                    color = Color.Black
                 )
                 Text(
                     text = user.email,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.Black
                 )
                 Row(
                     modifier = Modifier
@@ -82,18 +90,27 @@ fun ProfileDialog(
                 ) {
                     OutlinedButton(
                         onClick = { onDismissRequest() },
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF7C5ACB)
+                        )
                     ) {
-                        Text(text = stringResource(id = R.string.close))
+                        Text(
+                            text = stringResource(id = R.string.close),
+                            color = Color.White
+                        )
                     }
                     OutlinedButton(
                         onClick = { onConfirmation() },
                         modifier = Modifier.padding(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Red
+                        ),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
                     ) {
                         Text(
                             text = stringResource(id = R.string.logout),
-                            color = MaterialTheme.colorScheme.error
+                            color = Color.White
                         )
                     }
                 }

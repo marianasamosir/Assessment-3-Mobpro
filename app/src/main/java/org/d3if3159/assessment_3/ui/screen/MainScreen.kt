@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -36,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -111,7 +113,7 @@ fun MainScreen() {
                     )
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color(0xFFD36B6B),
+                    containerColor = Color(0xFF7C5ACB),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
@@ -132,24 +134,28 @@ fun MainScreen() {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                val options = CropImageContractOptions(
-                    null, CropImageOptions(
-                        imageSourceIncludeGallery = false,
-                        imageSourceIncludeCamera = true,
-                        fixAspectRatio = true
+            FloatingActionButton(
+                onClick = {
+                    val options = CropImageContractOptions(
+                        null, CropImageOptions(
+                            imageSourceIncludeGallery = false,
+                            imageSourceIncludeCamera = true,
+                            fixAspectRatio = true
+                        )
                     )
-                )
-                launcher.launch(options)
-            }) {
+                    launcher.launch(options)
+                }, containerColor = Color(0xFF7C5ACB)
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.add_student)
+                    contentDescription = stringResource(id = R.string.add_student),
+                    tint = Color.White
                 )
             }
         }
+
     ) {padding ->
-        ScreenContent(viewModel, Modifier.padding(padding))
+        ScreenContent(viewModel, user.email, Modifier.padding(padding))
         if (showDialog) {
             ProfileDialog(
                 user = user,
@@ -175,9 +181,13 @@ fun MainScreen() {
 }
 
 @Composable
-fun ScreenContent(viewModel: MainViewModel, modifier: Modifier){
+fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier){
     val data by viewModel.data
     val status by viewModel.status.collectAsState()
+
+    LaunchedEffect(userId) {
+        viewModel.retrieveData(userId)
+    }
 
     when (status) {
         ApiStatus.LOADING -> {
@@ -209,11 +219,15 @@ fun ScreenContent(viewModel: MainViewModel, modifier: Modifier){
             ) {
                 Text(text = stringResource(id = R.string.error))
                 Button(
-                    onClick = { viewModel.retrieveData()},
+                    onClick = { viewModel.retrieveData(userId)},
                     modifier = Modifier.padding(top = 16.dp),
-                    contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+                    contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF7C5ACB))
                 ) {
-                    Text(text = stringResource(id = R.string.try_again))
+                    Text(
+                        text = stringResource(id = R.string.try_again),
+                        color = Color.White
+                    )
                 }
             }
         }

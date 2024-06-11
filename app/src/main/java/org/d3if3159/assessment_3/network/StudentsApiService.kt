@@ -25,8 +25,10 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 interface StudentsApiService {
-    @GET("student.json") //tar ini diganti
-    suspend fun getStudent(): List<Student>
+    @GET("student.json") //tar ini diganti jadi student.php
+    suspend fun getStudent(
+        @Header("Authorization") userId: String
+    ): List<Student>
 
     @Multipart
 //    @POST()
