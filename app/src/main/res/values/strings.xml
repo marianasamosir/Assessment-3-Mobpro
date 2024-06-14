@@ -13,4 +13,7 @@
     <string name="cancle">Cancle</string>
     <string name="save">Save</string>
     <string name="error_message">Input must be exactly 10 characters</string>
+    <string name="delete_message">Delete this student?</string>
+    <string name="login_message">You are not logged in yet</string>
+    <string name="delete">Delete</string>
 </resources>

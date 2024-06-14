@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -158,27 +159,37 @@ fun MainScreen() {
         }
 
     ) {padding ->
-        ScreenContent(viewModel, user.email, Modifier.padding(padding))
-        if (showDialog) {
-            ProfileDialog(
-                user = user,
-                onDismissRequest = { showDialog = false }) {
-                CoroutineScope(Dispatchers.IO).launch { signOut(context, dataStore) }
-                showDialog = false
+        if (user.email.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = stringResource(id = R.string.login_message))
             }
-        }
-        if (showStudentDialog) {
-            StudentDialog(
-                bitmap = bitmap,
-                onDismissRequest = { showStudentDialog = false }) { name, nim ->
-                viewModel.saveData(user.email, name, nim, bitmap!!)
-                showStudentDialog = false
-            }
-        }
+        } else {
+            ScreenContent(viewModel, user.email, Modifier.padding(padding))
 
-        if (errorMessage != null) {
-            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-            viewModel.clearMessage()
+            if (showDialog) {
+                ProfileDialog(
+                    user = user,
+                    onDismissRequest = { showDialog = false }) {
+                    CoroutineScope(Dispatchers.IO).launch { signOut(context, dataStore) }
+                    showDialog = false
+                }
+            }
+            if (showStudentDialog) {
+                StudentDialog(
+                    bitmap = bitmap,
+                    onDismissRequest = { showStudentDialog = false }) { name, nim ->
+                    viewModel.saveData(user.email, name, nim, bitmap!!)
+                    showStudentDialog = false
+                }
+            }
+
+            if (errorMessage != null) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                viewModel.clearMessage()
+            }
         }
     }
 }
@@ -194,12 +205,9 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier){
 
     when (status) {
         ApiStatus.LOADING -> {
-//            Box(
-//                modifier = Modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                CircularProgressIndicator()
-//            }
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         }
 
         ApiStatus.SUCCESS -> {
@@ -210,13 +218,20 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier){
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ){
-                items(data) { ListItem(student = it) }
+                items(data) { student ->
+                    ListItem(
+                        student = student,
+                        onDeleteStudent = { viewModel.deleteData(userId, student.id) }
+                    )
+                }
             }
         }
         
         ApiStatus.FAILED -> {
             Column(
-                modifier = Modifier.fillMaxSize().padding(25.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(25.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -234,7 +249,9 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier){
                 )
                 Button(
                     onClick = { viewModel.retrieveData(userId)},
-                    modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF7C5ACB))
                 ) {
@@ -249,7 +266,8 @@ fun ScreenContent(viewModel: MainViewModel, userId: String, modifier: Modifier){
 }
 
 @Composable
-fun ListItem(student: Student) {
+fun ListItem(student: Student, onDeleteStudent: () -> Unit) {
+    var showHapusDialog by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -288,7 +306,29 @@ fun ListItem(student: Student) {
                 color = Color.White
             )
         }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = { showHapusDialog = true }) {
+                Icon(
+                    tint = Color.White,
+                    painter = painterResource(R.drawable.delete_icon),
+                    contentDescription = stringResource(R.string.profil)
+                )
+            }
+        }
     }
+    DisplayAlertDialog(
+        openDialog = showHapusDialog,
+        onDismissRequest = { showHapusDialog = false },
+        onConfirmation = {
+            onDeleteStudent()
+            showHapusDialog = false
+        }
+    )
 }
 
 private suspend fun signIn(context: Context, dataStore: UserDataStore) {
